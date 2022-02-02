@@ -14,7 +14,6 @@ const app = express();
 
 const router = express.Router();
 
-
 //BODY PARSER
 const bodyParser = require('body-parser');
 const bodyParserJSON = bodyParser.json();
