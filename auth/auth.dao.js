@@ -7,7 +7,7 @@ authSchema.statics = {
         const user = new this(data);
         user.save(cb);
     },
-    login: function(query, cd){
+    login: function(query, cb){
         this.find(query, cb);
     }
 }
