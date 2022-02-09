@@ -2,15 +2,10 @@
 const { WebhookClient } = require("dialogflow-fulfillment");
 // const { Card, Suggestion } = require("dialogflow-fulfillment");
 
-const Client = require("../dialowgflow/client.dao");
-const ClienteNuevo = require("../models/client.model");
-
 //sendgrid
-const sgMail = require("@sendgrid/mail");
-//api key sendgrid
-sgMail.setApiKey(
-  "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"
-);
+
+const sgMail = require('../services/sendgrid')
+
 
 exports.Chat = (req, res, next) => {
   const agent = new WebhookClient({ request: req, response: res });
@@ -30,21 +25,27 @@ exports.Chat = (req, res, next) => {
     nombres = agent.parameters["Nombres"];
     nTelefono = agent.parameters["NTelefono"];
     motivo = agent.parameters["Motivo"];
-    // NroSeguimiento = Date.now();
     // Estado = "PENDIENTE";
 
     /* envio correo con sendgrid */
     const msg = {
-      to: [email, emailPersonal], // Change to your recipient
-      from: "jam.pastaz@yavirac.edu.ec", // Change to your verified sender
+      to: emailPersonal, // Change to your recipient
+      from: email, // Change to your verified sender
       templateId: "d-99a6557d14f0473190339f7391d82106",
       dynamic_template_data: { nombres, nTelefono, motivo },
     };
     sgMail.send(msg);
+    console.log(msg)
 
-    agent.add("La solicitud para tu cita fue registrado correctamente.✅");
-    agent.add("Estaremos en contacto contigo" + " " + nombres);
-    agent.add("Eso es todo cuídate :)");
+    if(agent.locale === 'es'){
+      agent.add("La solicitud para tu cita fue registrado correctamente.✅");
+      agent.add("Estaremos en contacto contigo" + " " + nombres);
+      agent.add("Eso es todo cuídate :)");
+    } else if (agent.locale == 'en'){
+      agent.add("that's all " + nombres);
+      agent.add("take care C:")
+    }
+
   }
 
   // Run the proper function handler based on the matched Dialogflow intent name

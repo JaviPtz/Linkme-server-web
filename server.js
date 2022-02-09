@@ -17,6 +17,7 @@ DB();
 
 //BODY PARSER
 const bodyParser = require("body-parser");
+const { path } = require("./auth/auth.model");
 const bodyParserJSON = bodyParser.json();
 const bodyParserURLEncoded = bodyParser.urlencoded({ extended: true });
 
@@ -29,6 +30,8 @@ app.use(cors());
 
 app.use("/api", router);
 authRoutes(router);
+
+app.use(express.static('uploads'));
 
 router.get("/", (req, res) => {
   res.send("Hola de home");
