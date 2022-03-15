@@ -7,7 +7,10 @@ const cors = require("cors");
 const app = express();
 const router = express.Router();
 
-const authRoutes = require("./auth/auth.routes");
+// importacion de las rutas
+const authRoutes = require("./routes/auth.routes");
+const workRoutes = require('./routes/work.router')
+const dialowgflowRoutes = require('./routes/dialowgflow.routes')
 
 //inicializar la conexion con mongo
 const propierties = require("./config/properties");
@@ -17,7 +20,7 @@ DB();
 
 //BODY PARSER
 const bodyParser = require("body-parser");
-const { path } = require("./auth/auth.model");
+const { path } = require("./models/auth.model");
 const bodyParserJSON = bodyParser.json();
 const bodyParserURLEncoded = bodyParser.urlencoded({ extended: true });
 
@@ -30,6 +33,8 @@ app.use(cors());
 
 app.use("/api", router);
 authRoutes(router);
+workRoutes(router);
+dialowgflowRoutes(router);
 
 app.use(express.static('uploads'));
 

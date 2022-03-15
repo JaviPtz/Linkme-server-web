@@ -1,4 +1,4 @@
-const User = require("./auth.dao");
+const User = require("../dao/auth.dao");
 // libreria par emcriptar los datos del usuario
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
@@ -12,8 +12,9 @@ exports.createUser = (req, res, next) => {
 
   //crear usuario
   User.create(newUser, (err, user) => {
+
     if (err && err.code == 11000)
-      return res.status(409).send("Ya me vendite tu alma(email) perro ");
+      return res.status(409).send("ya existe ese usuario");
 
     if (err) return res.status(500).send("error en el servidor");
     const expiresIn = 24 * 60 * 60;
@@ -43,7 +44,7 @@ exports.loginUser = (req, res, next) => {
     if (err) return res.status(500).send("error en el servidor");
     if (!user) {
       // correo del usuario no existe
-      res.status(409).send({ message: "Algo salio mal perro :V" });
+      res.status(400).send({ message: "El usuario no existe" });
     } else {
       //encriptar la contraseña del usuario al momento de logearse
       const resultPassword = bcrypt.compareSync(
@@ -64,8 +65,18 @@ exports.loginUser = (req, res, next) => {
         res.send({ DataUser });
       } else {
         // contraseña incorecta
-        res.status(409).send({ message: "Algo salio mal perro :V" });
+        res.status(409).send({ message: "la contraseña no es la correcta" });
       }
     }
   });
 };
+
+exports.logout = (req, res, next)=>{
+  try{
+      res.send("logout")
+
+  }catch (err){
+    res.status(500).send(err);
+  }
+
+}

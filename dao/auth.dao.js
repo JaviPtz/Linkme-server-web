@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const authSchema = require('./auth.model');
+const authSchema = require('../models/auth.model');
 
 authSchema.statics = {
 

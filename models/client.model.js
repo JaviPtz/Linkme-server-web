@@ -1,21 +1,22 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const clientSchema = new Schema({
-    Email: {
+const workSchema = new Schema({
+    namesS: {
         type: String,
     },
-    Nombres: {
+    email: {
         type: String,
     },
-    NTelefono: {
+    numberPhone: {
         type: String,
     },
-    Motivo: {
+    reason: {
         type: String,
     }
+},{
 },{
     timestamps: true
 });
 
-module.exports = clientSchema;
+module.exports = mongoose.model('Clients', workSchema);

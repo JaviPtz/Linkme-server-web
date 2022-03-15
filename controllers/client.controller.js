@@ -1,29 +1,65 @@
-const Client = require("../dialowgflow/client.dao");
 
-exports.createClient = (req, res, next) => {
+const ClientModel = require('../models/client.model');
 
 
-  const newClient = {
-    Email: req.body.Email,
-    Nombres: req.body.Nombres,
-    NTelefono: req.body.NTelefono,
-    Motivo: req.body.Motivo,
-  };
+//Mostrar Clientes
+exports.listClients = async (req, res, next) => {
+  try {
+    const client = await ClientModel.find({});
+    res.json(client);
+  } catch (error) {
+    console.log(error);
+    res.send(error);
+  }
+};
 
-  //crear cliente
-  Client.create(newClient, (err, client) => {
-    if (err) return res.status(500).send("error en el servidor cliente");
+//El metodo para agregar clientes esta en la ruta dialogflow/dialogflow.js
+exports.createClient = async (req, res, next) => {
 
-    //envio de datos al front
-    const DataUser = {
-        Email: client.Email,
-        Nombres: client.Nombres,
-        NTelefono: client.NTelefono,
-        Motivo: client.Motivo,
-    };
+};
 
-    //response
-    res.send({ DataUser });
-    console.log(newClient)
-  });
+//Mostrar Trabajo o proyecto especificos (id)
+exports.showClient = async (req, res, next) => {
+  try {
+    const client = await ClientModel.findById(req.params.id);
+    if (!client) {
+      res.status(404).json({
+        message: "El cliente solicitado No existe",
+      });
+    }
+    res.json(client);
+  } catch (error) {
+    res.status(400).json({
+      message: "Error al procesar la petición",
+    });
+  }
+};
+
+//Actualizar la solicitud del cliente
+exports.updateClients = async (req, res, next) => {
+  try {
+    const clientUpdate = await ClientModel.findOneAndUpdate(
+      { _id: req.params.id },
+      req.body,
+      // devuelve el objeto actualizado
+      { new: true }
+    );
+    res.json({ message: "Se actualizo el estado del cliente" });
+  } catch (error) {
+    res.status(400).json({
+      message: "Error al procesar la petición",
+    });
+  }
+};
+
+// Eliminar Clientes
+exports.deleteClients = async (req, res, next) => {
+  try {
+    await ClientModel.findOneAndDelete({ _id: req.params.id });
+    res.json({ message: "Se elimino el Cliente" });
+  } catch (error) {
+    res.status(400).json({
+      message: "Error al procesar la petición",
+    });
+  }
 };
